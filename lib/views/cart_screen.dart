@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:market/stripe_payment/payment_manager.dart';
+import 'package:market/utils/utils.dart';
 import 'package:provider/provider.dart';
 import '../controller/theme.dart';
 import '../widgets/cart_item.dart';
@@ -134,102 +136,138 @@ class _CartScreenState extends State<CartScreen> {
                       );
                     }
                     return MediaQuery.of(context).size.width >= 700
-                        ? Row(
-                            children: [
-                              Spacer(flex: 2),
-                              Column(
+                        ? Column(
+                          children: [
+                            Row(
                                 children: [
-                                  Text(
-                                    "TOTAL",
-                                    style: TextStyle(fontSize: 14),
+                                  Spacer(flex: 2),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "TOTAL",
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      Text(
+                                        "\$${snapshot.data!["cartPrice"]}",
+                                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ],
                                   ),
+                                  Spacer(),
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      final collectionRef =
+                                          FirebaseFirestore.instance.collection("users").doc(_auth.currentUser!.uid).collection("cart");
+                                      final querySnapshot = await collectionRef.get();
+                                      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+                                        await documentSnapshot.reference.delete();
+                                      }
+                                      await _firestore.collection("users").doc(_auth.currentUser!.uid).update({
+                                        "cartPrice": 0,
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Clear Cart",
+                                      style: TextStyle(
+                                        color: Provider.of<MyTheme>(context).theme == Brightness.light ? Colors.black : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(flex: 2),
+                                ],
+                              ),
+                            SizedBox(height: 7),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: (){
+                                  if(snapshot.data!["cartPrice"] != 0){
+                                    PaymentManager.makePayment((snapshot.data!["cartPrice"]).toInt(), "USD");
+                                  } else{
+                                    showSnackBar("Adding some products to the Cart.", context);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: MediaQuery.of(context).size.width >= 700 ? Size(500, 50) : Size(double.infinity, 50),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                ),
+                                child: Text(
+                                  "Buy Now",
+                                  style: TextStyle(color: Colors.white, fontSize: 25),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                        : Column(
+                          children: [
+                            Row(
+                                children: [
                                   Text(
                                     "\$${snapshot.data!["cartPrice"]}",
                                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
+                                  Spacer(),
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      final collectionRef =
+                                          FirebaseFirestore.instance.collection("users").doc(_auth.currentUser!.uid).collection("cart");
+                                      final querySnapshot = await collectionRef.get();
+                                      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+                                        await documentSnapshot.reference.delete();
+                                      }
+                                      await _firestore.collection("users").doc(_auth.currentUser!.uid).update({
+                                        "cartPrice": 0,
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Clear Cart",
+                                      style: TextStyle(
+                                        color: Provider.of<MyTheme>(context).theme == Brightness.light ? Colors.black : Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              Spacer(),
-                              OutlinedButton(
-                                onPressed: () async {
-                                  final collectionRef =
-                                      FirebaseFirestore.instance.collection("users").doc(_auth.currentUser!.uid).collection("cart");
-                                  final querySnapshot = await collectionRef.get();
-                                  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-                                    await documentSnapshot.reference.delete();
+                            SizedBox(height: 7),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: (){
+                                  if(snapshot.data!["cartPrice"] != 0){
+                                    PaymentManager.makePayment((snapshot.data!["cartPrice"]).toInt(), "USD");
+                                  } else{
+                                    showSnackBar("Adding some products to the Cart.", context);
                                   }
-                                  await _firestore.collection("users").doc(_auth.currentUser!.uid).update({
-                                    "cartPrice": 0,
-                                  });
+
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                  minimumSize: MediaQuery.of(context).size.width >= 700 ? Size(500, 50) : Size(double.infinity, 50),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: Theme.of(context).primaryColor,
                                 ),
                                 child: Text(
-                                  "Clear Cart",
-                                  style: TextStyle(
-                                    color: Provider.of<MyTheme>(context).theme == Brightness.light ? Colors.black : Colors.white,
-                                  ),
+                                  "Buy Now",
+                                  style: TextStyle(color: Colors.white, fontSize: 25),
                                 ),
                               ),
-                              Spacer(flex: 2),
-                            ],
-                          )
-                        : Row(
-                            children: [
-                              Text(
-                                "\$${snapshot.data!["cartPrice"]}",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              Spacer(),
-                              OutlinedButton(
-                                onPressed: () async {
-                                  final collectionRef =
-                                      FirebaseFirestore.instance.collection("users").doc(_auth.currentUser!.uid).collection("cart");
-                                  final querySnapshot = await collectionRef.get();
-                                  for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-                                    await documentSnapshot.reference.delete();
-                                  }
-                                  await _firestore.collection("users").doc(_auth.currentUser!.uid).update({
-                                    "cartPrice": 0,
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Clear Cart",
-                                  style: TextStyle(
-                                    color: Provider.of<MyTheme>(context).theme == Brightness.light ? Colors.black : Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                            ),
+                          ],
+                        );
                   },
-                ),
-                SizedBox(height: 7),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: MediaQuery.of(context).size.width >= 700 ? Size(500, 50) : Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      backgroundColor: Theme.of(context).primaryColor,
-                    ),
-                    child: Text(
-                      "Buy Now",
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                  ),
                 ),
               ],
             ),

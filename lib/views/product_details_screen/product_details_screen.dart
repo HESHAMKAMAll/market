@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controller/storage_methods.dart';
 import '../../controller/theme.dart';
+import '../../stripe_payment/payment_manager.dart';
 import '../../utils/utils.dart';
 import '../../widgets/like_animation.dart';
 
@@ -244,7 +245,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    PaymentManager.makePayment(price.toInt(), "USD");
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     backgroundColor: Theme.of(context).primaryColor,

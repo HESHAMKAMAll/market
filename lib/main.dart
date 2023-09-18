@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:market/stripe_payment/stripe_keys.dart';
 import 'package:market/views/auth/login_screen.dart';
 import 'package:market/views/main_screen.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SharedPreferences pref = await SharedPreferences.getInstance();
+  Stripe.publishableKey = ApiKeys.publishableKey;
   // var user = FirebaseAuth.instance.currentUser ;
   // if(user == null){
   //   isLogin = false ;
