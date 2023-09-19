@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:market/views/product_details_screen/product_details_screen.dart';
 
 import '../controller/storage_methods.dart';
 import '../widgets/cart_item.dart';
@@ -61,21 +63,36 @@ class FavoriteScreen extends StatelessWidget {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, i) {
                       var data = snapshot.data!.docs[i];
-                      return CartItem(
-                        onPressedDelete: () async {
-                          await StorageMethods().likeProduct(
-                            snapshot.data!.docs[i]["productsID"],
-                            _auth.currentUser!.uid,
-                            snapshot.data!.docs[i]["likes"],
-                          );
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                  image: snapshot.data!.docs[i]["productImage"],
+                                  title: snapshot.data!.docs[i]["title"],
+                                  details: snapshot.data!.docs[i]["ProductDetails"],
+                                  price: snapshot.data!.docs[i]["price"],
+                                  productsID: snapshot.data!.docs[i]["productsID"],
+                                ),
+                              ));
                         },
-                        positioned: 100,
-                        iconColor: Colors.red,
-                        icon: Icons.favorite,
-                        image: data["productImage"],
-                        title: data["title"],
-                        details: data["ProductDetails"],
-                        price: data["price"].toString(),
+                        child: CartItem(
+                          onPressedDelete: () async {
+                            await StorageMethods().likeProduct(
+                              snapshot.data!.docs[i]["productsID"],
+                              _auth.currentUser!.uid,
+                              snapshot.data!.docs[i]["likes"],
+                            );
+                          },
+                          positioned: 100,
+                          iconColor: Colors.red,
+                          icon: Icons.favorite,
+                          image: data["productImage"],
+                          title: data["title"],
+                          details: data["ProductDetails"],
+                          price: data["price"].toString(),
+                        ),
                       );
                     },
                   )
@@ -83,21 +100,36 @@ class FavoriteScreen extends StatelessWidget {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, i) {
                       var data = snapshot.data!.docs[i];
-                      return CartItem(
-                        onPressedDelete: () async {
-                          await StorageMethods().likeProduct(
-                            snapshot.data!.docs[i]["productsID"],
-                            _auth.currentUser!.uid,
-                            snapshot.data!.docs[i]["likes"],
-                          );
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ProductDetailsScreen(
+                                  image: snapshot.data!.docs[i]["productImage"],
+                                  title: snapshot.data!.docs[i]["title"],
+                                  details: snapshot.data!.docs[i]["ProductDetails"],
+                                  price: snapshot.data!.docs[i]["price"],
+                                  productsID: snapshot.data!.docs[i]["productsID"],
+                                ),
+                              ));
                         },
-                        positioned: 100,
-                        iconColor: Colors.red,
-                        icon: Icons.favorite,
-                        image: data["productImage"],
-                        title: data["title"],
-                        details: data["ProductDetails"],
-                        price: data["price"].toString(),
+                        child: CartItem(
+                          onPressedDelete: () async {
+                            await StorageMethods().likeProduct(
+                              snapshot.data!.docs[i]["productsID"],
+                              _auth.currentUser!.uid,
+                              snapshot.data!.docs[i]["likes"],
+                            );
+                          },
+                          positioned: 100,
+                          iconColor: Colors.red,
+                          icon: Icons.favorite,
+                          image: data["productImage"],
+                          title: data["title"],
+                          details: data["ProductDetails"],
+                          price: data["price"].toString(),
+                        ),
                       );
                     },
                   ),

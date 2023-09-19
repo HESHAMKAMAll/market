@@ -114,11 +114,14 @@ class GridViewListIPhone extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         // borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                        child: Image.network(
-                          snapshot.data!.docs[i]["productImage"],
-                          height: 235,
-                          // width: 190,
-                          fit: BoxFit.cover,
+                        child: Hero(
+                          tag: snapshot.data!.docs[i]["productsID"],
+                          child: Image.network(
+                            snapshot.data!.docs[i]["productImage"],
+                            height: 235,
+                            // width: 190,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),

@@ -67,11 +67,6 @@ class GridViewListAll extends StatelessWidget {
                                 color: Colors.grey[100],
                               ),
                             ),
-                            // Image.asset(
-                            //   "assets/icons/icons8-love-96.png",
-                            //   height: 25,
-                            //   color: Colors.grey[100],
-                            // ),
                           ],
                         ),
                       ],
@@ -114,11 +109,14 @@ class GridViewListAll extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         // borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                        child: Image.network(
-                          snapshot.data!.docs[i]["productImage"],
-                          height: 235,
-                          // width: 190,
-                          fit: BoxFit.cover,
+                        child: Hero(
+                          tag: snapshot.data!.docs[i]["productsID"],
+                          child: Image.network(
+                            snapshot.data!.docs[i]["productImage"],
+                            height: 235,
+                            // width: 190,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -280,11 +278,6 @@ class GridViewListAll extends StatelessWidget {
                                 color: Colors.grey[100],
                               ),
                             ),
-                            // Image.asset(
-                            //   "assets/icons/icons8-love-96.png",
-                            //   height: 25,
-                            //   color: Colors.grey[100],
-                            // ),
                           ],
                         ),
                       ],

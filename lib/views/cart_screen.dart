@@ -90,11 +90,6 @@ class _CartScreenState extends State<CartScreen> {
                     await _firestore.collection("users").doc(_auth.currentUser!.uid).update({
                       "cartPrice": FieldValue.increment(-data["price"]),
                     });
-                    // Future.delayed(Duration(seconds: 1),() {setState(() {});},);
-                    // if (snapshot.data!.docs.isEmpty) {
-                    //   await _firestore.collection("users").doc(_auth.currentUser!.uid).update({"cartPrice": 0.0});
-                    //
-                    // }
                   },
                   positioned: 0,
                   iconColor: Theme.of(context).primaryColor,

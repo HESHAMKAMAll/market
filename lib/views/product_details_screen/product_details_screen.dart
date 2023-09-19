@@ -90,7 +90,6 @@ class ProductDetailsScreen extends StatelessWidget {
             },
           );
         }
-
         return Scaffold(
           appBar: AppBar(title: Text("Product Details", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
           body: ListView(
@@ -100,7 +99,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(image, fit: BoxFit.cover),
+                    child: Hero(tag: productsID,child: Image.network(image, fit: BoxFit.cover)),
                   ),
                   Positioned(
                     bottom: 0,
